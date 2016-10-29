@@ -9,5 +9,5 @@ pub fn hello_from_travel(dest: &str) {
 }
 
 fn degrees_to_rad(angle: f64) -> f64 {
-    (angle * 180.0f64)/f64::consts::PI
+    (angle * f64::consts::PI)/180.0f64
 }
