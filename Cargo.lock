@@ -1,0 +1,4 @@
+[root]
+name = "travelling-salesman-rust"
+version = "0.1.0"
+
