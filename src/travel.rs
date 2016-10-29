@@ -38,3 +38,25 @@ impl City {
         RADIUS * dsigma  
     }
 }
+
+// TODO: is it good idea to implement type alias Vec<City> et define function to manipulate it
+// or should I define a new struct Cities {list: Vec<City>, other info...} ?
+
+#[cfg(test)]
+mod tests {
+    use travel::*;
+    // test material
+
+    #[test]
+    fn test_distance() {
+        let paris = City { name: "Paris".to_string(), lon: 2.3476, lat: 48.8543 };
+        assert!(paris.distance(&paris) == 0f64);
+    }
+
+    #[test]
+    fn commutative_test() {
+        let paris = City { name: "Paris".to_string(), lon: 2.3476, lat: 48.8543 };
+        let marseille = City { name: "Marseille".to_string(), lon: 5.3700, lat: 43.2948 };
+        assert!(paris.distance(&marseille) == marseille.distance(&paris));
+    }
+}
