@@ -7,5 +7,6 @@ Rust traduction/implementation of the travelling salesman problem I already impl
   - Learn Rust
   - improve the interface for the input
   - performance improvement check
+  - test new features
 
 
