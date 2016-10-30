@@ -1,5 +1,8 @@
 //travel.rs
+
+use csv;
 use std::f64;
+use std::path::Path;
 
 pub fn hello_from_travel(dest: &City) {
     // test function to check that travel module can be called from main
@@ -11,11 +14,11 @@ fn degrees_to_rad(angle: f64) -> f64 {
     (angle * f64::consts::PI)/180.0f64
 }
 
-#[derive(Debug)]
+#[derive(Debug,RustcDecodable)]
 pub struct City {
     pub name: String,
-    pub lon: f64,
     pub lat: f64,
+    pub lon: f64,
 }
 
 impl City {
@@ -37,6 +40,24 @@ impl City {
         // return distance in km
         RADIUS * dsigma  
     }
+}
+
+/// take whatever can be casted to a Path and read the corresponding csv file.
+/// The csv file should be such that
+/// 1  ville,latitude,longitude
+/// 2  Paris,48.8575,2.3458
+/// 3  Lyon,45.7564,4.8333
+/// 4  ...
+/// The function return a Vec<City>, a list of the cities in the csv file parsed into
+/// the structure City.
+pub fn load_cities_from_file<P: AsRef<Path>>(path: P) -> Vec<City> {
+    let mut rdr = csv::Reader::from_file(path).unwrap();
+    let mut cities: Vec<City> = Vec::new();
+    for city in rdr.decode() {
+        let city: City = city.unwrap();
+        cities.push(city);
+    }
+    cities
 }
 
 // TODO: is it good idea to implement type alias Vec<City> et define function to manipulate it
