@@ -99,6 +99,20 @@ pub fn name_to_city<'a>(name: String, cities: &'a Vec<City>) -> &'a City {
     &cities[ix]
 }
 
+pub fn cost_of_travel_plan(plan: Vec<String>, cities: &Vec<City>) -> f64 {
+    let villes: Vec<&City> = plan.into_iter().map(|x| name_to_city(x, &cities)).collect();
+    println!("{:?}", villes);
+    //let cout = zip(villes[0..-1], villes[1..]).fold(0, |&mut acc(x, y| acc +  x.distance(y)).unwrap();
+    let len = villes.len();
+    let mut cout: f64 = 0f64;
+    for i in 0..len-1 {
+        println!("la distance entre {} et {} est {} km", 
+                villes[i].name, villes[i+1].name, villes[i].distance(&villes[i+1]));
+        cout = cout + villes[i].distance(villes[i+1]);
+    }
+    cout
+}
+
 //pub fn optimize_travel(plan: Vec<String>, cities: Vec<City>) -> (Vec<String>, f64) {
 //
 //}
