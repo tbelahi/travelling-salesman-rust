@@ -29,8 +29,12 @@ fn main() {
     
     let plan = load_travel_plan_from_file("./ressources/travel-plan.txt");
     println!("travel plan: {:?}", plan);
-    let nantes = name_to_city(format!("Nantes"), &cities);
+    let nantes = name_to_city("Nantes", &cities);
     println!("{:?}", nantes);
-    let cost = cost_of_travel_plan(plan, &cities);
+    let cost = cost_of_travel_plan(&plan, &cities);
+    let cost2 = cost_of_travel_plan(&plan, &cities);
     println!("Total distance of travel plan: {} km", cost);
+
+    println!("{:?}", 2%2);
+    println!("{:?}", optimize_travel(&plan, &cities, 1000f64, 3f64, 100));
 }

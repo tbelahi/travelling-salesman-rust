@@ -94,12 +94,12 @@ pub fn load_travel_plan_from_file(path: &str) -> Vec<String> {
    travel_plan
 }
 
-pub fn name_to_city<'a>(name: String, cities: &'a Vec<City>) -> &'a City {
+pub fn name_to_city<'a>(name: &str, cities: &'a Vec<City>) -> &'a City {
     let ix = cities.iter().position(|c| c.name == name).unwrap();
     &cities[ix]
 }
 
-pub fn cost_of_travel_plan(plan: Vec<String>, cities: &Vec<City>) -> f64 {
+pub fn cost_of_travel_plan(plan: &Vec<String>, cities: &Vec<City>) -> f64 {
     let villes: Vec<&City> = plan.into_iter().map(|x| name_to_city(x, &cities)).collect();
     println!("{:?}", villes);
     //let cout = zip(villes[0..-1], villes[1..]).fold(0, |&mut acc(x, y| acc +  x.distance(y)).unwrap();
@@ -113,9 +113,37 @@ pub fn cost_of_travel_plan(plan: Vec<String>, cities: &Vec<City>) -> f64 {
     cout
 }
 
-//pub fn optimize_travel(plan: Vec<String>, cities: Vec<City>) -> (Vec<String>, f64) {
-//
-//}
+fn shuffle<'a>(plan: &'a Vec<String>, iteration: &i32) -> &'a Vec<String> {
+     if iteration % 2 == 0 {
+       unimplemented!();
+    } else {
+       unimplemented!();
+    }
+} 
+
+fn accept(new_plan: &Vec<String>, old_plan: &Vec<String>, temperature: &f64, cities: &Vec<City>) -> bool {
+    let new_cost = cost_of_travel_plan(&new_plan, &cities);
+    let old_cost = cost_of_travel_plan(&old_plan, &cities);
+    unimplemented!();
+}
+
+pub fn optimize_travel<'a>(plan: &'a Vec<String>, cities: &Vec<City>, init_temp: f64, cooling_speed: f64, max_iter: i32) -> (&'a Vec<String>, Vec<f64>) {
+    let mut temperature = init_temp;
+    let mut couts: Vec<f64> = Vec::new();
+    let mut iter: i32 = 0;
+    let mut old = plan;
+    let mut new = plan;
+    while iter <= max_iter && temperature > 1f64 {
+        couts.push(cost_of_travel_plan(&old, &cities));
+        iter = iter + 1;
+        new = shuffle(&old, &iter);
+        if accept(&new, &old, &temperature, &cities) {
+            old = new;
+        }
+        temperature = init_temp * (-(iter as f64)/(max_iter as f64)*cooling_speed).exp();
+    }
+    (new, couts)
+}
 
 #[cfg(test)]
 mod tests {
