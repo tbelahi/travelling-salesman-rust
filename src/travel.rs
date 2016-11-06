@@ -37,11 +37,7 @@ impl City {
         let lat1 = degrees_to_rad(city.lat);
         let lon1 = degrees_to_rad(city.lon);
         // compute the angle variation between the two ciies
-        let dx: f64 = lon1.cos() * lat1.cos() - lon0.cos() * lat0.cos();
-        let dy: f64 = lon1.cos() * lat1.sin() - lon0.cos() * lat0.sin();
-        let dz: f64 = lat1.sin() - lat0.sin();
-        let c : f64= (dx.powf(2.0) + dy.powf(2.0) + dz.powf(2.0)).sqrt();
-        let dsigma: f64 = 2.0 * ((c/2.0f64).asin());
+        let dsigma: f64 = (lon0.sin()*lon1.sin()+lon0.cos()*lon1.cos()*(lat1-lat0).cos()).acos();
         // Earth's radius
         const RADIUS: f64 = 6400f64;
         // return distance in km
