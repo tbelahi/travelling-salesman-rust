@@ -1,6 +1,9 @@
 //travel.rs
 
 use csv;
+use rand;
+use rand::Rng;
+use rand::distributions::{IndependentSample, Range};
 use std::f64;
 use std::path::Path;
 use std::error::Error;
@@ -101,46 +104,79 @@ pub fn name_to_city<'a>(name: &str, cities: &'a Vec<City>) -> &'a City {
 
 pub fn cost_of_travel_plan(plan: &Vec<String>, cities: &Vec<City>) -> f64 {
     let villes: Vec<&City> = plan.into_iter().map(|x| name_to_city(x, &cities)).collect();
-    println!("{:?}", villes);
+    //println!("{:?}", villes);
     //let cout = zip(villes[0..-1], villes[1..]).fold(0, |&mut acc(x, y| acc +  x.distance(y)).unwrap();
     let len = villes.len();
     let mut cout: f64 = 0f64;
     for i in 0..len-1 {
-        println!("la distance entre {} et {} est {} km", 
-                villes[i].name, villes[i+1].name, villes[i].distance(&villes[i+1]));
+        // println!("la distance entre {} et {} est {} km", 
+        //         villes[i].name, villes[i+1].name, villes[i].distance(&villes[i+1]));
         cout = cout + villes[i].distance(villes[i+1]);
     }
     cout
 }
 
-fn shuffle<'a>(plan: &'a Vec<String>, iteration: &i32) -> &'a Vec<String> {
+fn shuffle(plan: &Vec<String>, iteration: &i32) ->  Vec<String> {
+    let between = Range::new(0, plan.len()-1);
+    let mut rng = rand::thread_rng();
+    let pos0 = between.ind_sample(&mut rng);
+    let pos1 = between.ind_sample(&mut rng);
+    let mut result = plan.clone();
+    // let mut result: &Vec<String> = Vec::new();
+    // for city in plan {
+    //     result.push(city);
+    // }
+
      if iteration % 2 == 0 {
-       unimplemented!();
+        // swap pos0 and pos1
+        let city0 = plan[pos0].clone();
+        result[pos0] = plan[pos1].clone();
+        result[pos1] = city0;
     } else {
-       unimplemented!();
+        // swap pos0 and neighbour
+        // or swap pos1 and neighbour 
+        if pos0 < pos1 {
+            let city = plan[pos0].clone();
+            result[pos0] = plan[pos0 + 1].clone();
+            result[pos0 + 1] = city;
+        } else {
+            let city = plan[pos1].clone();
+            result[pos1] = plan[pos1 + 1].clone();
+            result[pos1 + 1] = city;
+        }
     }
+    result
 } 
 
 fn accept(new_plan: &Vec<String>, old_plan: &Vec<String>, temperature: &f64, cities: &Vec<City>) -> bool {
     let new_cost = cost_of_travel_plan(&new_plan, &cities);
     let old_cost = cost_of_travel_plan(&old_plan, &cities);
-    unimplemented!();
+    let mut rng = rand::thread_rng();
+    // rng.gen::<f64> uniformely samples [0,1] (or ]0,1[, maybe)
+    if new_cost < old_cost || rng.gen::<f64>() < ((old_cost - new_cost)/temperature).exp() {
+        true
+    } else {
+        false
+    }
 }
 
-pub fn optimize_travel<'a>(plan: &'a Vec<String>, cities: &Vec<City>, init_temp: f64, cooling_speed: f64, max_iter: i32) -> (&'a Vec<String>, Vec<f64>) {
+pub fn optimize_travel(plan: &Vec<String>, cities: &Vec<City>, init_temp: f64, cooling_speed: f64, max_iter: i32) -> (Vec<String>, Vec<f64>) {
     let mut temperature = init_temp;
     let mut couts: Vec<f64> = Vec::new();
     let mut iter: i32 = 0;
-    let mut old = plan;
-    let mut new = plan;
+    let mut old = plan.clone();
+    let mut new = plan.clone();
     while iter <= max_iter && temperature > 1f64 {
         couts.push(cost_of_travel_plan(&old, &cities));
         iter = iter + 1;
         new = shuffle(&old, &iter);
         if accept(&new, &old, &temperature, &cities) {
-            old = new;
+            old = new.clone();
         }
         temperature = init_temp * (-(iter as f64)/(max_iter as f64)*cooling_speed).exp();
+        // if iter % 10 == 0 {
+        //     println!("Iteration: {}\nTemperature: {}, cost: {}", iter, temperature, couts[(iter - 1) as usize]);
+        // } 
     }
     (new, couts)
 }

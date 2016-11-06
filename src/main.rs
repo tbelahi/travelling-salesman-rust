@@ -1,4 +1,5 @@
 extern crate csv;
+extern crate rand;
 extern crate rustc_serialize;
 
 // load travel module
@@ -9,32 +10,14 @@ use travel::*;
 
 fn main() {
     println!("Salesmen are travelling ...");
-    let destination = City {name: format!("Chicago"), lon:-87.63, lat: 41.87 };
-    hello_from_travel(&destination);
-
-    let paris = City { name: "Paris".to_string(), lon: 2.3476, lat: 48.8543 };
-    let marseille = City { name: "Marseille".to_string(), lon: 5.3700, lat: 43.2948 };
-
-    println!("{:?}", paris);
-    println!("{:?}", marseille);
-    let d = paris.distance(&marseille);
-    println!("Distance de {} à {}: {:?}", paris.name, marseille.name, d);
 
     let cities: Vec<City> = load_cities_from_file("./ressources/cities.csv");
-    println!("{} est située aux coordonnées :", cities[5].name);
-    println!("longitude: {}", cities[5].lon);
-    println!("latitude: {}", cities[5].lat);
-    println!("la distance entre {} et {} est {} km", 
-                cities[6].name, cities[8].name, cities[6].distance(&cities[8]));
-    
     let plan = load_travel_plan_from_file("./ressources/travel-plan.txt");
-    println!("travel plan: {:?}", plan);
-    let nantes = name_to_city("Nantes", &cities);
-    println!("{:?}", nantes);
     let cost = cost_of_travel_plan(&plan, &cities);
-    let cost2 = cost_of_travel_plan(&plan, &cities);
-    println!("Total distance of travel plan: {} km", cost);
+    println!("Total distance of initial travel plan: {} km", cost);
 
-    println!("{:?}", 2%2);
-    println!("{:?}", optimize_travel(&plan, &cities, 1000f64, 3f64, 100));
+    println!{"Optimizing the travel plan..."}
+    let optimized = optimize_travel(&plan, &cities, 2000f64, 4f64, 1000);
+    println!("The optimized travel plan is: {:?}.", optimized.0);
+    println!("Its cost is: {} km.", optimized.1[optimized.1.len()-1]);
 }
