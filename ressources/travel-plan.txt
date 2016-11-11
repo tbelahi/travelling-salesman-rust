@@ -5,3 +5,7 @@ Bordeaux
 Nantes
 Lille
 Rennes
+Montpellier
+Dijon
+Amiens
+Nancy
