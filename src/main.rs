@@ -1,6 +1,10 @@
+#![feature(test)]
+extern crate test;
+
 extern crate csv;
 extern crate rand;
 extern crate rustc_serialize;
+
 
 // load travel module
 mod travel;
