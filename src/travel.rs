@@ -102,7 +102,8 @@ pub fn name_to_city<'a>(name: &str, cities: &'a Vec<City>) -> &'a City {
 pub fn cost_of_travel_plan(plan: &Vec<String>, cities: &Vec<City>) -> f64 {
     let villes: Vec<&City> = plan.into_iter().map(|x| name_to_city(x, &cities)).collect();
     // println!("{:?}", villes);
-    // let cout = zip(villes[0..-1], villes[1..]).fold(0, |&mut acc(x, y| acc +  x.distance(y)).unwrap();
+    // let cout = zip(villes[0..-1], villes[1..])
+    //                  .fold(0, |&mut acc(x, y| acc +  x.distance(y)).unwrap();
     let len = villes.len();
     let mut cout: f64 = 0f64;
     for i in 0..len - 1 {
@@ -181,7 +182,8 @@ pub fn optimize_travel(plan: &Vec<String>,
         }
         temperature = init_temp * (-(iter as f64) / (max_iter as f64) * cooling_speed).exp();
         // if iter % 10 == 0 {
-        //     println!("Iteration: {}\nTemperature: {}, cost: {}", iter, temperature, couts[(iter - 1) as usize]);
+        //     println!("Iteration: {}\nTemperature: {}, cost: {}",
+        //                      iter, temperature, couts[(iter - 1) as usize]);
         // }
     }
     (new, couts)
